@@ -7,9 +7,9 @@ from flask import jsonify, request
 from flask_classful import FlaskView
 
 from willamette.db import get_db
-from willamette.db.models.web_sites import WebPageModel
+from willamette.db.models.web_pages import WebPageModel
 from willamette.schemas import db_metadata_schema
-from willamette.schemas.web_sites import WebPageSchema
+from willamette.schemas.web_pages import WebPageSchema
 
 LOGGER = logging.getLogger(__name__)
 
