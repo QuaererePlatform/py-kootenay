@@ -4,6 +4,7 @@ import sys, inspect
 
 from flask_classful import FlaskView
 
+from .web_pages import *
 from .web_sites import *
 
 
