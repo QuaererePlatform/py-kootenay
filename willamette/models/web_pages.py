@@ -1,3 +1,4 @@
+__all__ = ['WebPageModel']
 import logging
 
 from arango_orm import Collection

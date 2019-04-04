@@ -4,8 +4,6 @@ http://flask.pocoo.org/docs/1.0/config/#configuring-from-files
 """
 import os
 
-SERVER_NAME = os.environ.get("FLASK_SERVER_NAME",
-                             default='willamette.quaerere.local')
 PREFERRED_URL_SCHEME = os.environ.get("FLASK_PREFERRED_URL_SCHEME",
                                       default='http')
 SECRET_KEY = os.environ.get("FLASK_SECRET_KEY", default=None)

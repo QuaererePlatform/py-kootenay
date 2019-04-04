@@ -2,8 +2,8 @@ __all__ = ['WebSiteSchema']
 
 from marshmallow import fields, post_load
 
-from . import marshmallow
-from willamette.db.models import WebSiteModel
+from willamette.app_util import marshmallow
+from willamette.models import WebSiteModel
 
 
 class WebSiteSchema(marshmallow.Schema):

@@ -7,9 +7,9 @@ RUN apk add yaml
 RUN apk add yaml-dev
 RUN mkdir /tmp/workdir
 RUN mkdir /tmp/build
-COPY columbia /tmp/build/columbia
+COPY willamette /tmp/build/columbia
 COPY README.rst /tmp/build/
-COPY MANIFEST.in /tmp/build/
+COPY LICENSE.txt /tmp/build/
 COPY setup.* /tmp/build/
 WORKDIR /tmp/build/
 RUN pip install "gunicorn[eventlet]>=19.9.0"

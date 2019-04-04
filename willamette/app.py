@@ -1,17 +1,20 @@
-"""
-
+"""Create and setup the Flask app
 """
 __all__ = ['create_app']
 
 from flask import Flask
 
-from .db import arangodb
-from .db.cli import db_cli
-from .schemas import marshmallow
+from .app_util import arangodb, marshmallow
+from .cli.db import db_cli
 from .views.api_v1 import register_views
 
 
 def create_app():
+    """Flask app factory
+
+    :return: Flask app instance
+    :rtype: Flask
+    """
     app = Flask(__name__)
     app.config.from_object('willamette.config.flask_config')
     marshmallow.init_app(app)

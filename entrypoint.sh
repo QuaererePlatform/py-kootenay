@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 if test -z "$WILLAMETTE_APP"; then
-    echo "$WILLAMETTE_APP environment variable must be set."
+    echo "WILLAMETTE_APP environment variable must be set."
     exit 1
 fi
 case $WILLAMETTE_APP in

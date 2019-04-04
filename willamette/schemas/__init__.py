@@ -1,14 +1,16 @@
-__all__ = ['marshmallow', 'db_metadata_schema']
+__all__ = ['db_metadata_schema', 'WebPageSchema', 'WebSiteSchema']
 
-from flask_marshmallow import Marshmallow
 from marshmallow import fields
 
-marshmallow = Marshmallow()
+from willamette.app_util import marshmallow
+from .web_pages import WebPageSchema
+from .web_sites import WebSiteSchema
 
 
 class DBMetadata(marshmallow.Schema):
     _id = fields.String()
     _key = fields.String()
     _rev = fields.String()
+
 
 db_metadata_schema = DBMetadata()

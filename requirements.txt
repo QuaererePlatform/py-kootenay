@@ -1,0 +1,12 @@
+# Generated file, do not edit
+Flask-arango-orm>=0.1.0
+Flask-Classful>=0.14.2
+flask-marshmallow>=0.10.0
+python-arango>=4.4
+pytest-runner
+Sphinx>=1.8.0
+sphinx-rtd-theme
+setuptools
+pytest>=4.2.0
+pytest-cov>=2.6.0
+pytest-flake8

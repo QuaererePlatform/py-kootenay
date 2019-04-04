@@ -6,15 +6,17 @@ from arango.exceptions import DocumentInsertError
 from flask import jsonify, request
 from flask_classful import FlaskView
 
-from willamette.db import get_db
-from willamette.db.models.web_pages import WebPageModel
-from willamette.schemas import db_metadata_schema
-from willamette.schemas.web_pages import WebPageSchema
+from willamette.app_util import get_db
+from willamette.models import WebPageModel
+from willamette.schemas import db_metadata_schema, WebPageSchema
 
 LOGGER = logging.getLogger(__name__)
 
 
 class WebPageView(FlaskView):
+    """Views for handling web_pages
+
+    """
     _schema = WebPageSchema()
     _schema_many = WebPageSchema(many=True)
 

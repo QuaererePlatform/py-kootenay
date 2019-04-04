@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+
+  willamette-api:
+    build: .
+
+  quaerere-arangodb:
+    image: 'arangodb:3.4'
+    env_file:
+      - '.env-arangodb'

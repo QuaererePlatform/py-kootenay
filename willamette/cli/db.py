@@ -4,7 +4,8 @@ import logging
 
 from flask.cli import AppGroup
 
-from willamette.db import arangodb, get_collections
+from willamette.app_util import get_db
+from willamette.models import get_collections
 
 LOGGER = logging.getLogger(__name__)
 
@@ -13,7 +14,7 @@ db_cli = AppGroup('db')
 
 @db_cli.command('init')
 def init_db():
-    db = arangodb.connection
+    db = get_db()
     LOGGER.info('Initializing database')
     for collection in get_collections():
         if not db.has_collection(collection):

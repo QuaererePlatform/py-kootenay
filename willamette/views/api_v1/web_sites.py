@@ -6,15 +6,17 @@ from arango.exceptions import DocumentInsertError
 from flask import jsonify, request
 from flask_classful import FlaskView
 
-from willamette.db import get_db
-from willamette.db.models.web_sites import WebSiteModel
-from willamette.schemas import db_metadata_schema
-from willamette.schemas.web_sites import WebSiteSchema
+from willamette.app_util import get_db
+from willamette.models import WebSiteModel
+from willamette.schemas import db_metadata_schema, WebSiteSchema
 
 LOGGER = logging.getLogger(__name__)
 
 
 class WebSiteView(FlaskView):
+    """Views for handling web_sites
+
+    """
     _schema = WebSiteSchema()
     _schema_many = WebSiteSchema(many=True)
 
@@ -41,6 +43,3 @@ class WebSiteView(FlaskView):
                 return jsonify({'errors': e.error_message}), e.http_code
         else:
             return jsonify({'errors': unmarshal.errors}), 400
-
-    def is_downloaded(self, key, cc_index_id):
-        pass
