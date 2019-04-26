@@ -7,7 +7,7 @@ fi
 case $WILLAMETTE_APP in
     api)
         echo "Running the API app"
-        exec gunicorn -c python:willamette.config.gunicorn_config willamette.app:create_app
+        exec gunicorn -c "python:willamette.config.gunicorn_config" "willamette.app:create_app()"
         ;;
      *)
         echo "Invalid app: $WILLAMETTE_APP"

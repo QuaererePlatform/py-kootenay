@@ -7,7 +7,7 @@ RUN apk add yaml
 RUN apk add yaml-dev
 RUN mkdir /tmp/workdir
 RUN mkdir /tmp/build
-COPY willamette /tmp/build/columbia
+COPY willamette /tmp/build/willamette
 COPY README.rst /tmp/build/
 COPY LICENSE.txt /tmp/build/
 COPY setup.* /tmp/build/

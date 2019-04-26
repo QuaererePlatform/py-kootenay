@@ -4,31 +4,38 @@
 import os
 import sys
 
-from setuptools import find_packages, setup
+from setuptools import setup
 from setuptools.command.install import install
 
 PROJECT_NAME = 'quaerere-willamette'
-PROJECT_RELEASE = '0.1.0.dev0'
-PROJECT_VERSION = '.'.join(PROJECT_RELEASE.split('.')[:2])
 INSTALL_REQUIRES = [
+    'Flask>=1.0.0',
     'Flask-arango-orm>=0.1.0',
     'Flask-Classful>=0.14.2',
+    'arango-orm==0.5.5',
     'flask-marshmallow>=0.10.0',
-    'python-arango>=4.4']
+    'marshmallow>=2.19.0,<3',
+    'python-arango>=4.4',
+    'quaerere-base-flask',
+    'quaerere-willamette-common', ]
 SETUP_REQUIRES = [
     'pytest-runner',
     'Sphinx>=1.8.0',
     'sphinx-rtd-theme',
-    'setuptools']
+    'setuptools', ]
 TESTS_REQUIRES = [
     'pytest>=4.2.0',
     'pytest-cov>=2.6.0',
     'pytest-flake8', ]
 
 
-def readme():
-    with open('README.rst') as f:
-        return f.read()
+def get_version():
+    with open('VERSION') as f:
+        return f.readline().strip()
+
+
+PROJECT_RELEASE = get_version()
+PROJECT_VERSION = '.'.join(PROJECT_RELEASE.split('.')[:2])
 
 
 # Taken from https://circleci.com/blog/continuously-deploying-python-\
@@ -59,16 +66,11 @@ class WriteRequirementsCommand(install):
             fh.writelines(all_requirements)
 
 
-
 setup(name=PROJECT_NAME,
       version=PROJECT_RELEASE,
-      description='A component of the Quaerere Platform',
-      long_description=readme(),
-      packages=find_packages(exclude=['docs', 'tests']),
-      zip_safe=False,
       test_suite='tests',
-      python_requires='~=3.6',
       install_requires=INSTALL_REQUIRES,
+      dependency_links=['git+https://github.com/ravenoak/arango-orm@update_meta#egg=arango-orm-0.5.5'],
       setup_requires=SETUP_REQUIRES,
       tests_require=TESTS_REQUIRES,
       entry_points={
