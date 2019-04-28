@@ -176,44 +176,44 @@ jobs:
 workflows:
   version: 2
 
-    build-test-release-py37:
-      jobs:
-        - install_deps_py37:
-            filters:
-              tags:
-                only: /.*/
-        - unittest_py37:
-            requires:
-              - install_deps_py37
-            filters:
-              tags:
-                only: /.*/
-        #- bump_publish_dev:
-        #    context: Test PyPI
-        #    requires:
-        #      - unittest_py37
-        #    filters:
-        #      branches:
-        #        only: develop
-        #- bump_publish_release:
-        #    context: Prod PyPI
-        #    requires:
-        #      - unittest_py37
-        #    filters:
-        #      branches:
-        #        only: /^release\/.*/
-        #- publish_prod_tag:
-        #    context: Prod PyPI
-        #    requires:
-        #      - unittest_py37
-        #    filters:
-        #      tags:
-        #        only: /^v[0-9]+(\.[0-9]+)+$/
-        #      branches:
-        #        ignore: /.*/
-        - docker-build-release:
-            requires:
-              - unittest_py37
-            filters:
-              branches:
-                only: master
+  build_test_publish_py37:
+    jobs:
+      - install_deps_py37:
+          filters:
+            tags:
+              only: /.*/
+      - unittest_py37:
+          requires:
+            - install_deps_py37
+          filters:
+            tags:
+              only: /.*/
+      #- bump_publish_dev:
+      #    context: Test PyPI
+      #    requires:
+      #      - unittest_py37
+      #    filters:
+      #      branches:
+      #        only: develop
+      #- bump_publish_release:
+      #    context: Prod PyPI
+      #    requires:
+      #      - unittest_py37
+      #    filters:
+      #      branches:
+      #        only: /^release\/.*/
+      #- publish_prod_tag:
+      #    context: Prod PyPI
+      #    requires:
+      #      - unittest_py37
+      #    filters:
+      #      tags:
+      #        only: /^v[0-9]+(\.[0-9]+)+$/
+      #      branches:
+      #        ignore: /.*/
+      #- docker-build-release:
+      #    requires:
+      #      - unittest_py37
+      #    filters:
+      #      branches:
+      #        only: master
