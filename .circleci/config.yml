@@ -103,6 +103,9 @@ jobs:
       - image: circleci/python:3.7
     environment:
       PYTEST_ADDOPTS: --cov-report=xml:test-reports/coverage.xml --junitxml=test-reports/junit.xml
+      FLASK_SECRET_KEY: TESTING
+      ARANGODB_USER: testing
+      ARANGODB_PASSWORD: testing
     steps:
       - checkout
       - restore_cache:

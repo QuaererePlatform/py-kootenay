@@ -26,7 +26,8 @@ SETUP_REQUIRES = [
 TESTS_REQUIRES = [
     'pytest>=4.2.0',
     'pytest-cov>=2.6.0',
-    'pytest-flake8', ]
+    'pytest-flake8',
+    'python-dotenv', ]
 
 
 def get_version():
@@ -70,7 +71,9 @@ setup(name=PROJECT_NAME,
       version=PROJECT_RELEASE,
       test_suite='tests',
       install_requires=INSTALL_REQUIRES,
-      dependency_links=['git+https://github.com/ravenoak/arango-orm@update_meta#egg=arango-orm-0.5.5'],
+      dependency_links=[
+          'git+https://github.com/ravenoak/arango-orm@update_meta#egg='
+          'arango-orm-0.5.5'],
       setup_requires=SETUP_REQUIRES,
       tests_require=TESTS_REQUIRES,
       entry_points={
