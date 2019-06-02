@@ -2,23 +2,12 @@
 """
 __all__ = ['register_views']
 
-import sys, inspect
-
-from flask_classful import FlaskView
+from quaerere_base_flask.views import register_views as _register_views
 
 from .web_pages import *
 from .web_sites import *
 
-
-def _view_classes():
-    """Generator for accessing imported FlaskView classes
-
-    :return: Yields FlaskView classes
-    :rtype: [FlaskView]
-    """
-    for cls in inspect.getmembers(sys.modules[__name__], inspect.isclass):
-        if issubclass(cls[1], FlaskView) and cls[0] != 'FlaskView':
-            yield cls[1]
+API_VERSION = 'v1'
 
 
 def register_views(app):
@@ -28,5 +17,4 @@ def register_views(app):
     :type app: flask.Flask
     :return:
     """
-    for view in _view_classes():
-        view.register(app, route_prefix='api/v1')
+    _register_views(app, __name__, API_VERSION)

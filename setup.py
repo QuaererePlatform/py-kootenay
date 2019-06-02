@@ -12,7 +12,6 @@ INSTALL_REQUIRES = [
     'Flask>=1.0.0',
     'Flask-arango-orm>=0.1.0',
     'Flask-Classful>=0.14.2',
-    'arango-orm==0.5.5',
     'flask-marshmallow>=0.10.0',
     'marshmallow>=2.19.0,<3',
     'python-arango>=4.4',
@@ -73,7 +72,7 @@ setup(name=PROJECT_NAME,
       install_requires=INSTALL_REQUIRES,
       dependency_links=[
           'git+https://github.com/ravenoak/arango-orm@update_meta#egg='
-          'arango-orm-0.5.5'],
+          'arango-orm-0.5.7'],
       setup_requires=SETUP_REQUIRES,
       tests_require=TESTS_REQUIRES,
       entry_points={

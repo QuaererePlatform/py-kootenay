@@ -7,7 +7,7 @@ commands:
     parameters:
       version_part:
         type: enum
-        enum: ['major', 'minor', 'patch', 'pre_release', 'pre_release_num', 'dev_num']
+        enum: ['major', 'minor', 'patch', 'pre_release', 'pre_release_num']
       bump_options:
         type: string
         default: '--no-tag --commit -m "Bump version: {current_version} → {new_version} [ci skip]"'
@@ -34,10 +34,10 @@ commands:
             bumpversion << parameters.bump_options >> << parameters.version_part >>
             python3 setup.py --version
             git log -n 1
-      #- run:
-      #    name: Push version bump
-      #    command: |
-      #      git push -u origin $CIRCLE_BRANCH
+      - run:
+          name: Push version bump
+          command: |
+            git push -u origin $CIRCLE_BRANCH
 
 
   publish_pypi:
@@ -45,7 +45,7 @@ commands:
     parameters:
       verify_tag:
         type: boolean
-        default: true
+        default: false
     steps:
       - restore_cache:
           keys:
@@ -57,6 +57,7 @@ commands:
             python3 -m venv venv
             . venv/bin/activate
             pip3 install -U -r requirements.txt
+            pip3 install -U wheel
             pip3 install -U twine
       - save_cache:
           key: v1-release-{{ .Branch }}-{{ checksum "requirements.txt" }}
@@ -77,6 +78,29 @@ commands:
             python3 setup.py sdist
             python3 setup.py bdist_wheel
             twine upload dist/*
+
+  build_docker:
+    description: "Builds docker image"
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker image
+          command: docker build -t ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${CIRCLE_TAG} .
+
+  publish_docker:
+    description: "Publishes docker image"
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker image
+          command: docker build -t ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${CIRCLE_TAG} .
+      - deploy:
+          name: Upload Docker image
+          command: |
+            echo "${DOCKERHUB_PASS}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
+            docker push $IMAGE_NAME
 
 jobs:
 
@@ -126,55 +150,37 @@ jobs:
             python3 --version
             python3 setup.py install
 
-  bump_publish_dev:
+  publish_pypi_dev:
     docker:
       - image: circleci/python:3.7
     environment:
       TWINE_REPOSITORY_URL: https://test.pypi.org/legacy/
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "04:9e:4c:45:49:63:80:3b:5c:b4:ee:9e:36:5c:2a:ea"
       - checkout
-      - bumpversion:
-          version_part: dev_num
-      #- publish_pypi
-      #    verify_tag: false
+      - publish_pypi
 
-  bump_publish_release:
+  publish_pypi_release:
     docker:
       - image: circleci/python:3.7
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "04:9e:4c:45:49:63:80:3b:5c:b4:ee:9e:36:5c:2a:ea"
+      - checkout
+      - publish_pypi
+
+  bump_version_pre_release:
+    docker:
+      - image: circleci/python:3.7
+    steps:
       - checkout
       - bumpversion:
           version_part: pre_release_num
-      #- publish_pypi
-      #    verify_tag: false
 
-  publish_prod_tag:
+  publish_pypi_prod_tag:
     docker:
       - image: circleci/python:3.7
     steps:
       - checkout
-      #- publish_pypi:
-
-  docker-build-release:
-    docker:
-      - image: circleci/buildpack-deps:stretch
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Build Docker image
-          command: docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:$CIRCLE_TAG .
-      - deploy:
-          name: Upload Docker image
-          command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push $IMAGE_NAME
+      - publish_pypi:
+          verify_tag: true
 
 workflows:
   version: 2
@@ -191,32 +197,34 @@ workflows:
           filters:
             tags:
               only: /.*/
-      #- bump_publish_dev:
-      #    context: Test PyPI
-      #    requires:
-      #      - unittest_py37
-      #    filters:
-      #      branches:
-      #        only: develop
-      #- bump_publish_release:
-      #    context: Prod PyPI
-      #    requires:
-      #      - unittest_py37
-      #    filters:
-      #      branches:
-      #        only: /^release\/.*/
-      #- publish_prod_tag:
-      #    context: Prod PyPI
-      #    requires:
-      #      - unittest_py37
-      #    filters:
-      #      tags:
-      #        only: /^v[0-9]+(\.[0-9]+)+$/
-      #      branches:
-      #        ignore: /.*/
-      #- docker-build-release:
-      #    requires:
-      #      - unittest_py37
-      #    filters:
-      #      branches:
-      #        only: master
+      - publish_pypi_dev:
+          context: Test PyPI
+          requires:
+            - unittest_py37
+          filters:
+            branches:
+              only: develop
+      - publish_pypi_release:
+          context: Prod PyPI
+          requires:
+            - unittest_py37
+          filters:
+            branches:
+              only: /^release\/.*/
+      - bump_version_pre_release:
+          requires:
+            - unittest_py37
+          filters:
+            branches:
+              only:
+                - develop
+                - /^release\/.*/
+      - publish_pypi_prod_tag:
+          context: Prod PyPI
+          requires:
+            - unittest_py37
+          filters:
+            tags:
+              only: /^v[0-9]+(\.[0-9]+)+$/
+            branches:
+              ignore: /.*/

@@ -2,16 +2,11 @@
 """
 __all__ = ['create_app']
 
-import logging
-
 from flask import Flask
 
-from .app_util import arangodb, marshmallow
+from .app_util import arangodb, marshmallow, register_logging
 from .cli.db import db_cli
-from .views.api_v1 import register_views
-
-
-LOGGER = logging.getLogger(__name__)
+from .views import register_views
 
 
 def create_app(*args, **kwargs):
@@ -20,8 +15,9 @@ def create_app(*args, **kwargs):
     :return: Flask app instance
     :rtype: Flask
     """
-    LOGGER.debug(f'Flask startup; args: {args}, kwargs: {kwargs}')
     app = Flask(__name__)
+    app.logger.debug(f'Flask startup; args: {args}, kwargs: {kwargs}')
+    register_logging(app)
     app.config.from_object('willamette.config.flask_config')
     marshmallow.init_app(app)
     arangodb.init_app(app)
