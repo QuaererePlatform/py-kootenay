@@ -39,7 +39,6 @@ commands:
           command: |
             git push -u origin $CIRCLE_BRANCH
 
-
   publish_pypi:
     description: "Uses twine to publish packages to PyPI"
     parameters:
@@ -96,12 +95,10 @@ commands:
               docker image tag ${IMAGE_NAME}:${TAG} ${IMAGE_NAME}:latest
             fi
             docker image save -o ${IMAGE_NAME}.tar
-
       - persist_to_workspace:
           root: /tmp/workspace
           paths:
             - ${IMAGE_NAME}.tar
-
 
   publish_docker:
     description: "Publishes docker image"
@@ -229,6 +226,12 @@ workflows:
           filters:
             branches:
               only: /^release\/.*/
+      - build_docker:
+          requires:
+            - unittest_py37
+          filters:
+            tags:
+              only: /.*/
       - bump_version_pre_release:
           requires:
             - unittest_py37
