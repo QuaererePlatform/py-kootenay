@@ -50,7 +50,12 @@ commands:
       - restore_cache:
           keys:
             - v1-release-{{ .Branch }}-{{ checksum "requirements.txt" }}
+            - v1-release-{{ .Branch }}
+            - v1-release
             - v1-dependency-cache-{{ .Branch }}-{{ checksum "requirements.txt" }}-py37
+            - v1-dependency-cache-{{ .Branch }}-{{ checksum "requirements.txt" }}
+            - v1-dependency-cache-{{ .Branch }}
+            - v1-dependency-cache
       - run:
           name: Install/Upgrade release requirements
           command: |
@@ -82,25 +87,30 @@ commands:
   build_docker:
     description: "Builds docker image"
     steps:
-      - checkout
-      - setup_remote_docker
       - run:
           name: Build Docker image
-          command: docker build -t ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${CIRCLE_TAG} .
+          command: |
+            TAG=${CIRCLE_TAG:=${CIRCLE_BRANCH}}
+            docker build -t ${IMAGE_NAME}:${TAG} .
+            if [ ! -z "${CIRCLE_TAG}" ]; then
+              docker image tag ${IMAGE_NAME}:${TAG} ${IMAGE_NAME}:latest
+            fi
+            docker image save -o ${IMAGE_NAME}.tar
+
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - ${IMAGE_NAME}.tar
+
 
   publish_docker:
     description: "Publishes docker image"
     steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Build Docker image
-          command: docker build -t ${IMAGE_NAME}:latest -t ${IMAGE_NAME}:${CIRCLE_TAG} .
       - deploy:
           name: Upload Docker image
           command: |
             echo "${DOCKERHUB_PASS}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
-            docker push $IMAGE_NAME
+            docker push ${IMAGE_NAME}
 
 jobs:
 
@@ -110,7 +120,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: v1-dependency-cache-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          key: v1-dependency-cache-{{ .Branch }}-{{ checksum "requirements.txt" }}-py37
       - run:
           name: Install package dependencies
           command: |
@@ -149,6 +159,14 @@ jobs:
             . venv/bin/activate
             python3 --version
             python3 setup.py install
+
+  build_docker:
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - checkout
+      - setup_remote_docker
+      - build_docker
 
   publish_pypi_dev:
     docker:
