@@ -85,6 +85,8 @@ commands:
 
   build_docker:
     description: "Builds docker image"
+    environment:
+      IMAGE_NAME: ravenoak/quaerere-willamette
     steps:
       - run:
           name: Build Docker image
