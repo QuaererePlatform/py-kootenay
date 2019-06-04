@@ -94,7 +94,7 @@ commands:
             if [ ! -z "${CIRCLE_TAG}" ]; then
               docker image tag ${IMAGE_NAME}:${TAG} ${IMAGE_NAME}:latest
             fi
-            docker image save -o ${IMAGE_NAME}.tar
+            docker image save -o ${IMAGE_NAME}.tar ${IMAGE_NAME}:latest
       - persist_to_workspace:
           root: /tmp/workspace
           paths:
