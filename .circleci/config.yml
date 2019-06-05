@@ -96,7 +96,7 @@ commands:
             fi
             docker image save -o new_image.tar ${IMAGE_NAME}:latest
       - persist_to_workspace:
-          root: /tmp/workspace
+          root: docker
           paths:
             - new_image.tar
 
