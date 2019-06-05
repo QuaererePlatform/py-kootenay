@@ -85,6 +85,7 @@ commands:
 
   build_docker:
     description: "Builds docker image"
+    working_directory:  /home/circleci/project
     steps:
       - run:
           name: Build Docker image
@@ -96,7 +97,7 @@ commands:
             fi
             docker image save -o new_image.tar ${IMAGE_NAME}:latest
       - persist_to_workspace:
-          root: docker
+          root: /home/circleci/project/docker
           paths:
             - new_image.tar
 
