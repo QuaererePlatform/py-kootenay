@@ -85,7 +85,6 @@ commands:
 
   build_docker:
     description: "Builds docker image"
-    working_directory:  /home/circleci/project
     steps:
       - run:
           name: Build Docker image
@@ -161,6 +160,7 @@ jobs:
   build_docker:
     docker:
       - image: circleci/buildpack-deps:stretch
+    working_directory:  /home/circleci/project
     environment:
         IMAGE_NAME: ravenoak/quaerere-willamette
     steps:
