@@ -128,8 +128,9 @@ commands:
             --env FLASK_APP=${FLASK_APP} \
             --env GUNICORN_LOGLEVEL=${GUNICORN_LOGLEVEL} \
             --name ${APP_NAME} ${IMAGE_NAME}
+            docker ps
             docker build -t integration_test ./integration_tests
-            docker run --network container:${IMAGE_NAME} integration_test
+            docker run --network container:${APP_NAME} integration_test
 
   publish_docker:
     description: "Publishes docker image"
