@@ -117,19 +117,19 @@ commands:
     steps:
       - run:
           command: |
-            docker run -d -p 5000:5000
-            --env WILLAMETTE_APP=${WILLAMETTE_APP}
-            --env GUNICORN_HOST=${GUNICORN_HOST}
-            --env ARANGODB_USER=${ARANGODB_USER}
-            --env ARANGODB_PASSWORD=${ARANGODB_PASSWORD}
-            --env FLASK_ENV=${FLASK_ENV}
-            --env FLASK_SECRET_KEY=${FLASK_SECRET_KEY}
-            --env ARANGODB_HOST=${ARANGODB_HOST}
-            --env FLASK_APP=${FLASK_APP}
-            --env GUNICORN_LOGLEVEL=${GUNICORN_LOGLEVEL}
-            --name ${APP_NAME}
-            ${IMAGE_NAME}
-            docker run --network container:${IMAGE_NAME} ${TESTING_IMAGE}
+            docker run -d -p 5000:5000 \
+            --env WILLAMETTE_APP=${WILLAMETTE_APP} \
+            --env GUNICORN_HOST=${GUNICORN_HOST} \
+            --env ARANGODB_USER=${ARANGODB_USER} \
+            --env ARANGODB_PASSWORD=${ARANGODB_PASSWORD} \
+            --env FLASK_ENV=${FLASK_ENV} \
+            --env FLASK_SECRET_KEY=${FLASK_SECRET_KEY} \
+            --env ARANGODB_HOST=${ARANGODB_HOST} \
+            --env FLASK_APP=${FLASK_APP} \
+            --env GUNICORN_LOGLEVEL=${GUNICORN_LOGLEVEL} \
+            --name ${APP_NAME} ${IMAGE_NAME}
+            docker build -t integration ./integration_tests
+            docker run --network container:${IMAGE_NAME} integration_test
 
   publish_docker:
     description: "Publishes docker image"
@@ -192,13 +192,15 @@ jobs:
     docker:
       - image: circleci/buildpack-deps:stretch
       - image: arangodb:3.4
+        environment:
+          ARANGO_ROOT_PASSWORD: password
     environment:
       IMAGE_NAME: quaerereproject/willamette
       APP_NAME: quaerere-willamette
       WILLAMETTE_APP: api
       GUNICORN_HOST: 0.0.0.0
       ARANGODB_USER: quaerere
-      ARANGODB_PASSWORD: Ftsv2J8jDQEypbi
+      ARANGODB_PASSWORD: password
       FLASK_SECRET_KEY: integration-testing
       FLASK_ENV: development
       ARANGODB_HOST: http://quaerere-arangodb:8529

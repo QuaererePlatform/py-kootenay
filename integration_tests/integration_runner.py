@@ -6,7 +6,7 @@ from willamette_client.client import WillametteClient
 
 
 def load_test_data():
-    pass
+    print("Loading test data")
 
 
 def main():
