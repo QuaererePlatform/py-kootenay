@@ -116,6 +116,7 @@ commands:
     description: "Integration test"
     steps:
       - run:
+          name: ""
           command: |
             docker run -d -p 5000:5000 \
             --env WILLAMETTE_APP=${WILLAMETTE_APP} \
@@ -196,12 +197,13 @@ jobs:
         environment:
           ARANGO_ROOT_PASSWORD: password
     environment:
-      IMAGE_NAME: quaerereproject/willamette
+      IMAGE_NAME: quaerereplatform/willamette
       APP_NAME: quaerere-willamette
       WILLAMETTE_APP: api
       GUNICORN_HOST: 0.0.0.0
       ARANGODB_USER: quaerere
       ARANGODB_PASSWORD: password
+      ARANGODB_ROOT_PASSWORD: password
       FLASK_SECRET_KEY: integration-testing
       FLASK_ENV: development
       ARANGODB_HOST: http://quaerere-arangodb:8529
