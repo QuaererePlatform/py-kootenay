@@ -119,6 +119,7 @@ commands:
           name: ""
           command: |
             docker run -d -p 5000:5000 \
+            --network container:test-db \
             --env WILLAMETTE_APP=${WILLAMETTE_APP} \
             --env GUNICORN_HOST=${GUNICORN_HOST} \
             --env ARANGODB_USER=${ARANGODB_USER} \
@@ -131,7 +132,7 @@ commands:
             --name ${APP_NAME} ${IMAGE_NAME}
             docker ps
             docker build -t integration_test ./integration_tests
-            docker run --network container:${APP_NAME} integration_test
+            docker run --network container:test-db integration_test
 
   publish_docker:
     description: "Publishes docker image"
@@ -194,7 +195,7 @@ jobs:
     docker:
       - image: circleci/buildpack-deps:stretch
       - image: arangodb:3.4
-        name: test_db
+        name: test-db
         environment:
           ARANGO_ROOT_PASSWORD: password
     environment:
@@ -207,7 +208,7 @@ jobs:
       ARANGODB_ROOT_PASSWORD: password
       FLASK_SECRET_KEY: integration-testing
       FLASK_ENV: development
-      ARANGODB_HOST: http://quaerere-arangodb:8529
+      ARANGODB_HOST: http://test-db:8529
       FLASK_APP: willamette.app:create_app
       GUNICORN_LOGLEVEL: debug
     steps:

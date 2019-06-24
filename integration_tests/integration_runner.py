@@ -55,7 +55,7 @@ def get_arango_conn():
     return db_conn
 
 
-@retry(wait_fixed=5000)
+@retry(wait_fixed=5000, stop_max_attempt_number=3)
 def get_arango_root_conn():
     a_client = arango.ArangoClient(
         protocol='http', host=ARANGODB_HOST, port=8529)
