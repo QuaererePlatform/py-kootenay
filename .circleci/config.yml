@@ -118,21 +118,8 @@ commands:
       - run:
           name: ""
           command: |
-            docker run -d \
-            --network container:test-db \
-            --env WILLAMETTE_APP=${WILLAMETTE_APP} \
-            --env GUNICORN_HOST=${GUNICORN_HOST} \
-            --env ARANGODB_USER=${ARANGODB_USER} \
-            --env ARANGODB_PASSWORD=${ARANGODB_PASSWORD} \
-            --env FLASK_ENV=${FLASK_ENV} \
-            --env FLASK_SECRET_KEY=${FLASK_SECRET_KEY} \
-            --env ARANGODB_HOST=${ARANGODB_HOST} \
-            --env FLASK_APP=${FLASK_APP} \
-            --env GUNICORN_LOGLEVEL=${GUNICORN_LOGLEVEL} \
-            --name ${APP_NAME} ${IMAGE_NAME}
-            docker ps
-            docker build -t integration_test ./integration_tests
-            docker run --network container:test-db integration_test
+            cd integration_tests
+            docker-compose up integration_test
 
   publish_docker:
     description: "Publishes docker image"
@@ -194,10 +181,6 @@ jobs:
   integration_test:
     docker:
       - image: circleci/buildpack-deps:stretch
-      - image: arangodb:3.4
-        name: test-db
-        environment:
-          ARANGO_ROOT_PASSWORD: password
     environment:
       IMAGE_NAME: quaerereplatform/willamette
       APP_NAME: web-app
@@ -214,7 +197,6 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - build_docker
       - test_docker
 
   publish_pypi_dev:
