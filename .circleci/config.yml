@@ -116,10 +116,10 @@ commands:
     description: "Integration test"
     steps:
       - run:
-          name: ""
+          name: "Test runner"
           command: |
             cd integration_tests
-            docker-compose up integration_test
+            docker-compose up test_runner
 
   publish_docker:
     description: "Publishes docker image"
