@@ -3,7 +3,7 @@ RUN apk update
 RUN apk upgrade
 RUN pip install PyYAML
 RUN pip install python-arango
-RUN pip install quaerere-willamette-client
+RUN pip install retrying
 RUN mkdir /tmp/workdir
 COPY test_data.yaml /tmp/workdir/
 WORKDIR /tmp/workdir

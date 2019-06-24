@@ -194,6 +194,7 @@ jobs:
     docker:
       - image: circleci/buildpack-deps:stretch
       - image: arangodb:3.4
+        name: test_db
         environment:
           ARANGO_ROOT_PASSWORD: password
     environment:
