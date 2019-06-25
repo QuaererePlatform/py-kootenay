@@ -102,10 +102,10 @@ def verify_collection(name, data, collection_conn):
     LOGGER.info(f'Performing "get" test on: {name}')
     for row in data:
         verify_get(token, row)
-    # LOGGER.info(f'Performing "delete" test on: {name}')
-    # deleted = verify_delete(token, random.choice(data), collection_conn)
-    # LOGGER.info(f'Performing "put" test on: {name}')
-    # verify_insert(token, deleted, collection_conn)
+    LOGGER.info(f'Performing "delete" test on: {name}')
+    deleted = verify_delete(token, random.choice(data), collection_conn)
+    LOGGER.info(f'Performing "put" test on: {name}')
+    verify_insert(token, deleted, collection_conn)
 
 
 def verify_list(token, data):
@@ -145,11 +145,16 @@ def verify_delete(token, data, collection):
     resp = requests.get(url)
     if resp.ok:
         raise ValueError('Should not be able to get deleted item')
+    found = None
     try:
         found = collection.get({'_key': key})
     except arango.DocumentGetError:
         return data
-    raise ValueError(f'Found deleted object in database: {found}')
+    except Exception as err:
+        LOGGER.warning(f'Exception fallthrough: {err}')
+    if found is not None:
+        raise ValueError(f'Found deleted object in database: {found}')
+    return data
 
 
 def verify_insert(token, data, collection):
