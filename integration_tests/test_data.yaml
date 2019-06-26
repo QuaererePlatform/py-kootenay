@@ -1,0 +1,51 @@
+---
+web_sites:
+  - url: https://www.example1.com/en_us
+    inLanguage: en_us
+    _key: web-site-1
+  - url: https://news.example1.com/en_us
+    inLanguage: en_us
+    _key: web-site-2
+  - url: https://www.example2.com/en_us
+    inLanguage: en_us
+    _key: web-site-3
+  - url: https://www.example3.com/en_us
+    inLanguage: en_us
+    _key: web-site-4
+  - url: https://news.example4.com/en_us
+    inLanguage: en_us
+    _key: web-site-5
+
+web_pages:
+  - _key: web-page-1
+    url: https://www.example1.com/en_us/foobar
+    text: |
+      testing text.
+      foo
+      bar
+    web_site_key: web-site-1
+
+  - _key: web-page-2
+    url: https://www.example1.com/en_us/spameggs
+    text: |
+      testing text.
+      spam
+      eggs
+    web_site_key: web-site-1
+
+  - _key: web-page-3
+    url: https://www.example2.com/en_us/foobar
+    text: |
+      testing text.
+      foo
+      bar
+    web_site_key: web-site-3
+
+  - _key: web-page-4
+    url: https://www.example2.com/en_us/spameggs
+    text: |
+      testing text.
+      spam
+      eggs
+    web_site_key: web-site-3
+...
