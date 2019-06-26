@@ -14,6 +14,6 @@ def get_db():
     return arangodb.connection
 
 def register_logging(app):
-    root_logger = logging.getLogger()
+    logging.basicConfig(level=app.logger.level)
     qbf_v_b_logger.handlers = app.logger.handlers
     qbf_v_b_logger.setLevel(app.logger.level)
