@@ -22,12 +22,14 @@ ARANGODB_USER = os.getenv('ARANGODB_USER')
 ARANGODB_PASSWORD = os.getenv('ARANGODB_PASSWORD')
 ARANGODB_HOST = os.getenv('ARANGODB_HOST', 'test_db')
 DB_NAME = 'quaerere'
-COLLECTIONS = ['WebSites']
+COLLECTIONS = ['WebSites', 'WebPages']
 TEST_DATA_MAP = {
     'WebSites': 'web_sites',
+    'WebPages': 'web_pages',
 }
 TOKEN_MAP = {
     'WebSites': 'web-site',
+    'WebPages': 'web-page',
 }
 
 

@@ -1,27 +1,51 @@
 ---
 web_sites:
-  - url: https://www.vice.com/en_us
+  - url: https://www.example1.com/en_us
     inLanguage: en_us
     _key: web-site-1
-  - url: https://news.vice.com/en_us
+  - url: https://news.example1.com/en_us
     inLanguage: en_us
     _key: web-site-2
-  - url: https://broadly.vice.com/en_us
+  - url: https://www.example2.com/en_us
     inLanguage: en_us
     _key: web-site-3
-  - url: https://free.vice.com/en_us
+  - url: https://www.example3.com/en_us
     inLanguage: en_us
     _key: web-site-4
-  - url: https://motherboard.vice.com/en_us
+  - url: https://news.example4.com/en_us
     inLanguage: en_us
     _key: web-site-5
-  - url: https://www.cnn.com
-    inLanguage: en_us
-    _key: web-site-6
-  - url: https://edition.cnn.com
-    inLanguage: en_us
-    _key: web-site-7
-  - url: https://www.huffingtonpost.com
-    inLanguage: en_us
-    _key: web-site-8
+
+web_pages:
+  - _key: web-page-1
+    url: https://www.example1.com/en_us/foobar
+    text: |
+      testing text.
+      foo
+      bar
+    web_site_key: web-site-1
+
+  - _key: web-page-2
+    url: https://www.example1.com/en_us/spameggs
+    text: |
+      testing text.
+      spam
+      eggs
+    web_site_key: web-site-1
+
+  - _key: web-page-3
+    url: https://www.example2.com/en_us/foobar
+    text: |
+      testing text.
+      foo
+      bar
+    web_site_key: web-site-3
+
+  - _key: web-page-4
+    url: https://www.example2.com/en_us/spameggs
+    text: |
+      testing text.
+      spam
+      eggs
+    web_site_key: web-site-3
 ...
