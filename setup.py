@@ -16,7 +16,7 @@ INSTALL_REQUIRES = [
     'marshmallow>=2.16.0,<3',
     'python-arango>=4.4',
     'quaerere-base-flask>=0.2.1',
-    'quaerere-willamette-common', ]
+    'quaerere-willamette-common>=0.2.0', ]
 SETUP_REQUIRES = [
     'pytest-runner',
     'Sphinx>=1.8.0',
