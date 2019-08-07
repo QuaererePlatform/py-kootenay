@@ -1,13 +1,14 @@
 __all__ = ['WebSiteView']
 
 from quaerere_base_flask.views.base import BaseView
+from willamette_common.schemas.api_v1 import WebSiteSchema
 
-from willamette.app_util import get_db
-from willamette.models import WebSiteModel
-from willamette_common.schemas import WebSiteSchema
+from willamette.models.api_v1 import WebSiteModel
+from willamette.app_util import ArangoDBMixin
+
+WebSiteSchema.model_class = WebSiteModel
 
 
-class WebSiteView(BaseView):
-    def __init__(self):
-        WebSiteSchema.model_class = WebSiteModel
-        super().__init__(WebSiteModel, WebSiteSchema, get_db)
+class WebSiteView(ArangoDBMixin, BaseView):
+    _obj_model = WebSiteModel
+    _obj_schema = WebSiteSchema

@@ -1,6 +1,5 @@
 FROM python:3.7-alpine
-RUN apk update
-RUN apk upgrade
+RUN apk update && apk upgrade
 COPY requirements.txt /tmp/
 RUN pip install -r /tmp/requirements.txt
 RUN mkdir /tmp/workdir

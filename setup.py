@@ -29,7 +29,8 @@ TESTS_REQUIRES = [
     'python-dotenv', ]
 DEP_LINKS = [
     'git+https://github.com/ravenoak/arango-orm@update_meta#egg='
-    'arango-orm-0.5.7', ]
+    'arango-orm-0.5.7',
+]
 
 
 def get_version():

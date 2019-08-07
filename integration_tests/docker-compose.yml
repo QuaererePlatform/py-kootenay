@@ -7,8 +7,12 @@ services:
       - "8529:8529"
     environment:
       ARANGO_ROOT_PASSWORD: password
+
   web_app:
-    build: ..
+    build:
+      context: ..
+      args:
+        develop: "true"
     ports:
       - "5000:5000"
     depends_on:
@@ -24,6 +28,7 @@ services:
       ARANGODB_HOST: http://test_db:8529
       FLASK_APP: willamette.app:create_app
       GUNICORN_LOGLEVEL: debug
+
   test_runner:
     build: .
     depends_on:

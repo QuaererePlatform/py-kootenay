@@ -1,11 +1,11 @@
-__all__ = ['get_collections', 'WebPageModel', 'WebSiteModel']
+__all__ = ['get_collections', 'WebPageModelV1', 'WebSiteModelV1']
 
 import sys, inspect
 
 from arango_orm import Collection
 
-from .web_pages import WebPageModel
-from .web_sites import WebSiteModel
+from .api_v1 import WebPageModel as WebPageModelV1
+from .api_v1 import WebSiteModel as WebSiteModelV1
 
 
 def _model_classes():
