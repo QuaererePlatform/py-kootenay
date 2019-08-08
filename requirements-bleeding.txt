@@ -1,4 +1,4 @@
-git+https://github.com/ravenoak/arango-orm@update_meta#egg=arango-orm-0.5.7
+git+https://github.com/ravenoak/arango-orm@update_meta#egg=arango-orm
 git+https://github.com/QuaererePlatform/willamette-common@develop#egg=quaerere_willamette_common
 git+https://github.com/QuaererePlatform/quaerere-base-common@develop#egg=quaerere_base_common
 git+https://github.com/QuaererePlatform/quaerere-base-flask@develop#egg=quaerere_base_flask
