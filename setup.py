@@ -10,11 +10,11 @@ from setuptools.command.install import install
 PROJECT_NAME = 'quaerere-willamette'
 INSTALL_REQUIRES = [
     'Flask>=1.0.0',
-    'Flask-arango-orm>=0.1.0',
+    'Flask-arango-orm>=0.1.1',
     'Flask-Classful>=0.14.2',
     'flask-marshmallow>=0.10.0',
     'marshmallow>=2.16.0,<3',
-    'python-arango>=4.4',
+    'python-arango<5,>=4.4',
     'quaerere-base-flask>=0.2.1',
     'quaerere-willamette-common>=0.2.0', ]
 SETUP_REQUIRES = [

@@ -1,11 +1,27 @@
-version: '3'
+version: "3"
 
 services:
 
   willamette-api:
-    build: .
+    build:
+      context: "."
+      args:
+        develop: "true"
+    ports:
+      - 5000:5000
+    depends_on:
+      - quaerere-arangodb
+    env_file:
+      - ".env"
+    environment:
+      WILLAMETTE_APP: api
 
   quaerere-arangodb:
-    image: 'arangodb:3.4'
+    image: "quaerereplatform/quaerere-arangodb:latest"
+    ports:
+      - 8529:8529
     env_file:
-      - '.env-arangodb'
+      - ".env.arangodb"
+    volumes:
+      - "../../volumes/arangodb:/var/lib/arangodb3"
+      - "../../volumes/arangodb-apps:/var/lib/arangodb3-apps"

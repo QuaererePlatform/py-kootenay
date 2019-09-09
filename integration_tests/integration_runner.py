@@ -38,6 +38,7 @@ def load_test_data():
         return yaml.safe_load(yaml_file)
 
 
+@retry(wait_fixed=5000, stop_max_attempt_number=3)
 def get_arango_conn():
     if ARANGODB_USER is None:
         LOGGER.error('Please set env variable "ARANGODB_USER"')
@@ -55,38 +56,6 @@ def get_arango_conn():
         raise IOError(f'Unable to connect to {DB_NAME}: {res}')
 
     return db_conn
-
-
-@retry(wait_fixed=5000, stop_max_attempt_number=3)
-def get_arango_root_conn():
-    a_client = arango.ArangoClient(
-        protocol='http', host=ARANGODB_HOST, port=8529)
-    LOGGER.info(f'Connecting to database _system on host {ARANGODB_HOST} '
-                f'as root')
-    db_conn = a_client.db('_system',
-                          'root',
-                          ARANGODB_ROOT_PASSWORD)
-
-    res = db_conn.ping()
-    if res != 200:
-        raise IOError(f'Unable to connect to _system: {res}')
-
-    return db_conn
-
-
-def create_db(db_conn):
-    LOGGER.info(f'Creating user "{ARANGODB_USER}"')
-    user = {
-        'username': ARANGODB_USER,
-        'password': ARANGODB_PASSWORD,
-        'active': True, }
-    LOGGER.info(f'Creating database "{DB_NAME}"')
-    db_conn.create_database(DB_NAME, users=[user])
-
-
-def create_collection(name, db_conn):
-    LOGGER.info(f'Creating collection {name}')
-    db_conn.create_collection(name)
 
 
 def seed_collection(name, db_conn, data):
@@ -174,13 +143,10 @@ def verify_insert(token, data, collection):
 
 
 def setup_db():
-    sys_db = get_arango_root_conn()
-    create_db(sys_db)
     q_db = get_arango_conn()
     test_data = load_test_data()
     for collection in COLLECTIONS:
         collection_data = test_data[TEST_DATA_MAP[collection]]
-        create_collection(collection, q_db)
         seed_collection(collection, q_db, collection_data)
         verify_collection(collection,
                           collection_data,
