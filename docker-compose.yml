@@ -12,7 +12,7 @@ services:
     depends_on:
       - quaerere-arangodb
     env_file:
-      - ".env"
+      - ".env.willamette-api"
     environment:
       WILLAMETTE_APP: api
 

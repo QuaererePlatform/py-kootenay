@@ -13,9 +13,7 @@ import requests
 from retrying import retry
 
 LOGGER = logging.getLogger(__name__)
-WILLAMETTE_API_URL = os.getenv('WILLAMETTE_API_URL',
-                               'http://web_app:5000/api/')
-WEB_SITE_DB_COLLECTION = 'WebSites'
+APP_API_URL = os.getenv('APP_API_URL', 'http://web_app:5000/api/')
 DATA_FILE = pathlib.Path('test_data.yaml')
 ARANGODB_ROOT_PASSWORD = os.getenv('ARANGODB_ROOT_PASSWORD')
 ARANGODB_USER = os.getenv('ARANGODB_USER')
@@ -31,6 +29,14 @@ TOKEN_MAP = {
     'WebSites': 'web-site',
     'WebPages': 'web-page',
 }
+
+
+class DBNotReadyException(Exception):
+    pass
+
+
+def retry_on_db_not_ready(exception):
+    return isinstance(exception, DBNotReadyException)
 
 
 def load_test_data():
@@ -80,7 +86,7 @@ def verify_collection(name, data, collection_conn):
 
 
 def verify_list(token, data):
-    url = WILLAMETTE_API_URL + f'v1/{token}/'
+    url = APP_API_URL + f'v1/{token}/'
     LOGGER.debug(f'Fetching list from: {url}')
     resp = requests.get(url)
     if not resp.ok:
@@ -97,7 +103,7 @@ def verify_list(token, data):
 def verify_get(token, data):
     key = data['_key']
     LOGGER.info(f'Fetching {key}')
-    url = WILLAMETTE_API_URL + f'v1/{token}/{key}/'
+    url = APP_API_URL + f'v1/{token}/{key}/'
     resp = requests.get(url)
     if not resp.ok:
         raise IOError(f'Could not get url: {resp.reason}')
@@ -109,7 +115,7 @@ def verify_get(token, data):
 def verify_delete(token, data, collection):
     key = data['_key']
     LOGGER.info(f'Deleting {key}')
-    url = WILLAMETTE_API_URL + f'v1/{token}/{key}/'
+    url = APP_API_URL + f'v1/{token}/{key}/'
     del_resp = requests.delete(url)
     if not del_resp.ok:
         raise IOError(f'Could not delete item: {del_resp.reason}')
@@ -130,7 +136,7 @@ def verify_delete(token, data, collection):
 
 def verify_insert(token, data, collection):
     LOGGER.info(f'Inserting: {data}')
-    url = WILLAMETTE_API_URL + f'v1/{token}/'
+    url = APP_API_URL + f'v1/{token}/'
     resp = requests.post(url, json=data)
     if not resp.ok:
         raise IOError(f'Could not insert item: {resp.reason}')
@@ -142,8 +148,22 @@ def verify_insert(token, data, collection):
         raise ValueError(f'Not equal; reference: {data}, actual: {actual}')
 
 
+@retry(retry_on_exception=retry_on_db_not_ready,
+       stop_max_attempt_number=7,
+       wait_random_min=1500,
+       wait_random_max=3000)
+def verify_db_ready(db_conn):
+    LOGGER.info('Verifying DB is ready')
+    for collection in COLLECTIONS:
+        LOGGER.debug(f'Verifying collection {collection} is available')
+        if not db_conn.has_collection(collection):
+            LOGGER.error(f'Missing the {collection} collection')
+            raise DBNotReadyException
+
+
 def setup_db():
     q_db = get_arango_conn()
+    verify_db_ready(q_db)
     test_data = load_test_data()
     for collection in COLLECTIONS:
         collection_data = test_data[TEST_DATA_MAP[collection]]
