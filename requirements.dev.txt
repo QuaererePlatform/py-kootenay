@@ -1,0 +1,4 @@
+ipython
+bump2version
+python-dotenv
+pre-commit
