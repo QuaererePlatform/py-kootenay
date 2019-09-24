@@ -1,4 +1,0 @@
-ipython
-bumpversion
-python-dotenv
-pre-commit
