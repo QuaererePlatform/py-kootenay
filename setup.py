@@ -2,6 +2,7 @@
 """Setup for the willamette micro-service, part of the Quaerere Platform
 """
 import os
+import re
 import sys
 
 from setuptools import setup
@@ -10,26 +11,29 @@ from setuptools.command.install import install
 PROJECT_NAME = 'quaerere-willamette'
 INSTALL_REQUIRES = [
     'Flask>=1.0.0',
-    'Flask-arango-orm>=0.1.0',
+    'Flask-arango-orm>=0.1.1',
     'Flask-Classful>=0.14.2',
     'flask-marshmallow>=0.10.0',
-    'marshmallow>=2.16.0,<3',
-    'python-arango>=4.4',
-    'quaerere-base-flask>=0.2.1',
-    'quaerere-willamette-common', ]
+    'marshmallow<3,>=2.16.0',
+    'python-arango<5,>=4.4',
+    'quaerere-base-flask>=0.3.0',
+    'quaerere-willamette-common>=0.2.0',
+]
 SETUP_REQUIRES = [
     'pytest-runner',
-    'Sphinx>=1.8.0',
+    'Sphinx<2,>=1.8.0',
     'sphinx-rtd-theme',
-    'setuptools', ]
+    'setuptools',
+]
 TESTS_REQUIRES = [
     'pytest>=4.2.0',
     'pytest-cov>=2.6.0',
     'pytest-flake8',
-    'python-dotenv', ]
+    'python-dotenv',
+]
 DEP_LINKS = [
-    'git+https://github.com/ravenoak/arango-orm@update_meta#egg='
-    'arango-orm-0.5.7', ]
+    'git+https://github.com/ravenoak/arango-orm@update_meta#egg=arango-orm',
+]
 
 
 def get_version():
@@ -48,6 +52,10 @@ class VerifyVersionCommand(install):
     description = 'verify that the git tag matches our version'
 
     def run(self):
+        release_regex = re.compile(r'^[0-9]+\.[0-9]+\.[0-9]+$')
+        if not release_regex.match(PROJECT_RELEASE):
+            sys.exit(0)
+
         tag = os.getenv('CIRCLE_TAG')
 
         if tag != 'v' + PROJECT_RELEASE:

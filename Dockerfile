@@ -1,24 +1,15 @@
 FROM python:3.7-alpine
-RUN apk update
-RUN apk upgrade
-RUN apk add gcc
-RUN apk add git
-RUN apk add musl-dev
-RUN apk add yaml
-RUN apk add yaml-dev
-RUN mkdir /tmp/workdir
-RUN mkdir /tmp/build
-COPY willamette /tmp/build/willamette
-COPY README.rst /tmp/build/
-COPY LICENSE.txt /tmp/build/
-COPY VERSION /tmp/build/
-COPY setup.* /tmp/build/
-WORKDIR /tmp/build/
-RUN pip install "gunicorn[eventlet]>=19.9.0"
-RUN python setup.py install
-RUN apk del gcc
-RUN apk del musl-dev
-RUN apk del yaml-dev
+ARG develop="false"
+RUN mkdir /tmp/build /tmp/workdir
+COPY . /tmp/build/
 COPY entrypoint.sh /usr/bin/
+WORKDIR /tmp/build/
+RUN apk update && apk upgrade
+RUN apk add gcc git musl-dev yaml yaml-dev
+RUN pip install "gunicorn[eventlet]>=19.9.0"
+RUN if [ "${develop}" == "true" ]; then pip install -U -r requirements.bleeding.txt; pip freeze; fi
+RUN python setup.py install
+RUN apk del gcc musl-dev yaml-dev
 WORKDIR /tmp/workdir
+ENV FLASK_APP="willamette.app:create_app"
 ENTRYPOINT ["entrypoint.sh"]

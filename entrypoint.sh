@@ -6,6 +6,8 @@ if test -z "$WILLAMETTE_APP"; then
 fi
 case $WILLAMETTE_APP in
     api)
+        echo "Creating/Upgrading database"
+        flask db init
         echo "Running the API app"
         exec gunicorn -c "python:willamette.config.gunicorn_config" "willamette.app:create_app()"
         ;;

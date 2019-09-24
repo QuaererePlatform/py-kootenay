@@ -4,9 +4,10 @@ __all__ = ['create_app']
 
 from flask import Flask
 
-from .app_util import arangodb, marshmallow, register_logging
+from quaerere_base_flask.views import register_views
+
+from .app_util import arangodb, register_logging
 from .cli.db import db_cli
-from .views import register_views
 
 
 def create_app(*args, **kwargs):
@@ -19,10 +20,9 @@ def create_app(*args, **kwargs):
     app.logger.debug(f'Flask startup; args: {args}, kwargs: {kwargs}')
     register_logging(app)
     app.config.from_object('willamette.config.flask_config')
-    marshmallow.init_app(app)
     arangodb.init_app(app)
 
-    register_views(app)
+    register_views(app, 'willamette.views.api_v1', 'v1')
 
     app.cli.add_command(db_cli)
 
