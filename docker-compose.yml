@@ -5,8 +5,6 @@ services:
   willamette-api:
     build:
       context: "."
-      args:
-        develop: "true"
     ports:
       - 5000:5000
     depends_on:
@@ -15,6 +13,10 @@ services:
       - ".env.willamette-api"
     environment:
       WILLAMETTE_APP: api
+    volumes:
+      - "../quaerere-base-common/quaerere_base_common:/usr/local/lib/python3.7/site-packages/quaerere_base_common"
+      - "../quaerere-base-flask/quaerere_base_flask:/usr/local/lib/python3.7/site-packages/quaerere_base_flask"
+      - "../willamette-common/willamette_common:/usr/local/lib/python3.7/site-packages/willamette_common"
 
   quaerere-arangodb:
     image: "quaerereplatform/quaerere-arangodb:latest"

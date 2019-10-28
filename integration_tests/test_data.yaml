@@ -1,18 +1,33 @@
 ---
 web_sites:
   - url: https://www.example1.com/en_us
+    source_accounting:
+      data_origin: testing
+      datetime_acquired: 2019-10-26T13:40:02.781111+00:00
     inLanguage: en_us
     _key: web-site-1
   - url: https://news.example1.com/en_us
+    source_accounting:
+      data_origin: testing
+      datetime_acquired: 2019-10-26T13:40:02.781111+00:00
     inLanguage: en_us
     _key: web-site-2
   - url: https://www.example2.com/en_us
+    source_accounting:
+      data_origin: testing
+      datetime_acquired: 2019-10-26T13:40:02.781111+00:00
     inLanguage: en_us
     _key: web-site-3
   - url: https://www.example3.com/en_us
+    source_accounting:
+      data_origin: testing
+      datetime_acquired: 2019-10-26T13:40:02.781111+00:00
     inLanguage: en_us
     _key: web-site-4
   - url: https://news.example4.com/en_us
+    source_accounting:
+      data_origin: testing
+      datetime_acquired: 2019-10-26T13:40:02.781111+00:00
     inLanguage: en_us
     _key: web-site-5
 
@@ -23,6 +38,9 @@ web_pages:
       testing text.
       foo
       bar
+    source_accounting:
+      data_origin: testing
+      datetime_acquired: 2019-10-26T13:40:02.781111+00:00
     web_site_key: web-site-1
 
   - _key: web-page-2
@@ -31,6 +49,9 @@ web_pages:
       testing text.
       spam
       eggs
+    source_accounting:
+      data_origin: testing
+      datetime_acquired: 2019-10-26T13:40:02.781111+00:00
     web_site_key: web-site-1
 
   - _key: web-page-3
@@ -39,6 +60,9 @@ web_pages:
       testing text.
       foo
       bar
+    source_accounting:
+      data_origin: testing
+      datetime_acquired: 2019-10-26T13:40:02.781111+00:00
     web_site_key: web-site-3
 
   - _key: web-page-4
@@ -47,5 +71,8 @@ web_pages:
       testing text.
       spam
       eggs
+    source_accounting:
+      data_origin: testing
+      datetime_acquired: 2019-10-26T13:40:02.781111+00:00
     web_site_key: web-site-3
 ...

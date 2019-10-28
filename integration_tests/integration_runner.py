@@ -41,7 +41,7 @@ def retry_on_db_not_ready(exception):
 
 def load_test_data():
     with open(DATA_FILE) as yaml_file:
-        return yaml.safe_load(yaml_file)
+        return yaml.load(yaml_file, yaml.BaseLoader)
 
 
 @retry(wait_fixed=5000, stop_max_attempt_number=3)

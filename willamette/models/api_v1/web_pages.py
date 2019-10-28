@@ -14,7 +14,15 @@ LOGGER = logging.getLogger(__name__)
 class WebPageModel(WebPageFieldsMixin, Collection):
     __collection__ = 'WebPages'
     _index = [
-        {'type': 'hash', 'fields': ['url'], 'unique': True}
+        {
+            'type': 'hash',
+            'fields': [
+                'source_accounting.datetime_acquired',
+                'source_accounting.data_origin',
+                'url',
+            ],
+            'unique': True
+        },
     ]
 
     web_site = relationship(WebSiteModel, 'web_site_key')
